@@ -40,6 +40,7 @@ class WsSubprovider extends Subprovider {
       this.log('Socket not open. Request queued.')
       return
     }
+    console.log("---------------------> Using the WS Provider")
     if (payload.method === 'eth_sendRawTransaction') {
       this.pendingRequests.set(payload.id, [payload, end])
       const newPayload = payload.params[0]

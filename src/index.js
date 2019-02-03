@@ -156,21 +156,39 @@ class Provider {
             txParams.to,
             txParams.value || 0,
             txParams.data])
+
           txParams.to = this.metaIdentityManagerAddress
+
+          // go to: https://github.com/ethereum/web3.js/blob/1.0/packages/web3-eth-abi/src/AbiCoder.js
+          // line 207
+          // we need to separate the function signature from the endoded parameters
+          // then we call de decodeParametersFunction
 
           const tx = new Transaction(txParams)
           const rawTx = '0x' + tx.serialize().toString('hex')
+          console.log(`
+          ----RAW TX: 
+          ${rawTx}
+          --------
+          SIGN FUNCTION
+          ${JSON.stringify(this.signFunction)}
+          --------------------`)
           let metaSignedTx
           if (this.isWeb3Provided === true) {
             metaSignedTx = await this.txRelaySigner.signRawTx(rawTx, this.signFunction)
           } else {
             metaSignedTx = await this.txRelaySigner.signRawTx(rawTx)
+            console.log(`Meta:
+            ${metaSignedTx}
+            String:
+            ${JSON.stringify(metaSignedTx)}`)
           }
           const params = {
             metaNonce: txParams.nonce,
             metaSignedTx,
             blockchain: this.network
           }
+
           return (null, params)
         }
       })

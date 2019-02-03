@@ -43,6 +43,10 @@ function _getTypesFromAbi (abi, functionName) {
 
 function functionTx (abi, functionName, args, txObject) {
   const types = _getTypesFromAbi(abi, functionName)
+  // console.log('ABI: \n' + JSON.stringify(abi))
+  // console.log('functionName: \n' + JSON.stringify(functionName))
+  // console.log('args: \n' + JSON.stringify(args))
+  // console.log('txObject: \n' + JSON.stringify(txObject))
   const txData = _encodeFunctionTxData(functionName, types, args)
 
   let txObjectCopy = {}

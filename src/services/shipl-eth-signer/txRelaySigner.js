@@ -5,6 +5,9 @@ const solsha3 = require('solidity-sha3').default
 const leftPad = require('left-pad')
 const txutils = require('./txutils')
 
+const Web3 = require('web3')
+const web3 = new Web3()
+
 const version = UportIdentity.TxRelay.latestVersion
 const txRelayAbi = UportIdentity.TxRelay[version].abi
 
@@ -35,6 +38,8 @@ class TxRelaySigner {
     const hashInput = '0x1900' + util.stripHexPrefix(this.txRelayAddress) +
                 util.stripHexPrefix(this.whitelistOwner) + pad(nonce) + to + data
     const hash = solsha3(hashInput)
+    // const hash = web3.utils.soliditySha3(hashInput)
+
     let sig
     if (customSignFunction === undefined) {
       sig = this.signMsgHash(hash)
@@ -63,7 +68,8 @@ class TxRelaySigner {
   }
 
   signMsgHash (msgHash) {
-    return util.ecsign(Buffer.from(util.stripHexPrefix(msgHash), 'hex'), Buffer.from(util.stripHexPrefix(this.keypair.privateKey), 'hex'))
+    return util.ecsign(Buffer.from(util.stripHexPrefix(msgHash), 'hex'),
+      Buffer.from(util.stripHexPrefix(this.keypair.privateKey), 'hex'))
   }
 
   decodeMetaTx (rawMetaSignedTx) {
